@@ -44,7 +44,9 @@ namespace API.Services
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds
-            )
+            );
+            
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
     }
 }
