@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using System.Text;
 using API.Data;
 using API.Entities;
@@ -34,6 +35,31 @@ namespace API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Jwt auth header", 
+                    Name = "Authorization", 
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer", 
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
             });
            services.AddDbContext<StoreContext>(opt=>{
                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
