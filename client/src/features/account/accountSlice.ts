@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { FieldValues } from "react-hook-form";
+import { history } from "../..";
 import agent from "../../app/api/agent";
 import { User } from "../../app/models/user";
 
@@ -39,7 +40,13 @@ export const fetchCurrentUser = createAsyncThunk<User>(
 export const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {},
+  reducers: {
+    signOut: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+      history.push("/");
+    },
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
@@ -55,3 +62,5 @@ export const accountSlice = createSlice({
     );
   },
 });
+
+export const { signOut } = accountSlice.actions;
